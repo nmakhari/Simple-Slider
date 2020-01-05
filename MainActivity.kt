@@ -18,13 +18,20 @@ class MainActivity : AppCompatActivity() {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 status_textview_mainActivity.text=progress.toString()
 
-                val translationDistance = (initial_y_translation + progress +(resources.getDimension(R.dimen.text_anim_step)) *-1)
+                val translationDistance = (initial_y_translation + progress +(resources.getDimension(R.dimen.text_anim_step)) *(-1))
                 /*above the distance that the status text view should be translated is calculated using the initial pos and a dimen
                 created in a resource file*/
 
                 status_textview_mainActivity.animate().translationY(translationDistance)
 
                 //now, onProgressChanged, the translation distance will be calculated and the text view will be moved up
+
+                if(!fromUser) {//prevents spamming of the reset button when there is no progress
+                    status_textview_mainActivity.animate().setDuration(500).rotationBy(360f)
+                        .translationY(initial_y_translation)
+
+                    //above, over the 500ms the text is rotated a full circle and translated back to where is started
+                }
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -44,9 +51,7 @@ class MainActivity : AppCompatActivity() {
             seekBar_mainActivity.progress = 0 //reset the progress to zero
             //now that the progress is back to zero, we should animate the text as needed
 
-            status_textview_mainActivity.animate().setDuration(500).rotationBy(360f).translationY(initial_y_translation)
 
-            //above, over the 500ms the text is rotated a full circle and translated back to where is started
         }
 
     }
